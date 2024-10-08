@@ -14,7 +14,7 @@ export function useConsumo() {
 			return prev + item.total;
 		}, 0);
 
-		if (menu.length > 0) {
+		if (menu.length <= 0) {
 			setPercent(0);
 			setPropina(0);
 		}
