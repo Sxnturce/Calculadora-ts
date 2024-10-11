@@ -1,35 +1,28 @@
+import { Dispatch, useMemo } from "react";
+import { idPercent } from "../../data/Propina";
+import { ActionsConsumo, MenuProps } from "../../reducers/consumo-reducer";
+
 type PropinaProp = {
-	subtotal: number;
-	setPercent: React.Dispatch<React.SetStateAction<number>>;
-	propina: number;
-	total: number;
-	saveChange: () => void;
+	dispatch: Dispatch<ActionsConsumo>;
+	state: MenuProps;
 };
 
-function Propina({
-	subtotal,
-	setPercent,
-	propina,
-	total,
-	saveChange,
-}: PropinaProp) {
-	const idPercent = [
-		{
-			id: "tip-10",
-			value: 0.1,
-			label: "10%",
-		},
-		{
-			id: "tip-20",
-			value: 0.2,
-			label: "20%",
-		},
-		{
-			id: "tip-50",
-			value: 0.5,
-			label: "50%",
-		},
-	];
+function Propina({ dispatch, state }: PropinaProp) {
+	const subtot = useMemo(() => {
+		const result = state.menu.reduce((prev, item) => {
+			return prev + item.total;
+		}, 0);
+		return result;
+	}, [state.menu]);
+
+	const propina = useMemo(() => {
+		return subtot * state.percent;
+	}, [state.menu, state.percent]);
+
+	const tot = useMemo(() => {
+		return subtot + propina;
+	}, [state.menu, propina]);
+
 	return (
 		<>
 			<div className="p-4">
@@ -42,7 +35,10 @@ function Propina({
 							name="percent"
 							value={percent.value}
 							onChange={(e) => {
-								setPercent(+e.target.value);
+								dispatch({
+									type: "get-percent",
+									payload: { percent: +e.target.value },
+								});
 							}}
 						/>
 					</div>
@@ -51,20 +47,20 @@ function Propina({
 					<h2 className="font-bold text-xl">Totales y propina</h2>
 					<div className="flex flex-col gap-1">
 						<p>
-							Subotal a pagar: <span className="font-bold">${subtotal}</span>
+							Subotal a pagar: <span className="font-bold">${subtot}</span>
 						</p>
 						<p>
 							Propina:{" "}
 							<span className="font-bold">${propina ? propina : "0.00"}</span>
 						</p>
 						<p>
-							Total a pagar: <span className="font-bold">${total}</span>
+							Total a pagar: <span className="font-bold">${tot}</span>
 						</p>
 					</div>
 					<button
 						className="w-full bg-black/90 text-white text-center font-bold py-2 hover:bg-white hover:ring-2 hover:text-blue-700  transition-all ease-in-out"
 						onClick={() => {
-							saveChange();
+							dispatch({ type: "clear-items" });
 						}}
 					>
 						Guardar Orden

@@ -1,11 +1,13 @@
+import { Dispatch } from "react";
+import { ActionsConsumo } from "../../reducers/consumo-reducer";
 import type { MenuItem } from "../../types";
 
 type MenuProp = {
 	item: MenuItem;
-	del: (id: number) => void;
+	dispatch: Dispatch<ActionsConsumo>;
 };
 
-function Consumo({ item, del }: MenuProp) {
+function Consumo({ item, dispatch }: MenuProp) {
 	const { id, name, price, quantity, total } = item;
 
 	return (
@@ -24,7 +26,7 @@ function Consumo({ item, del }: MenuProp) {
 				<button
 					className="w-8 h-8 rounded-full bg-red-600 text-white font-bold p-2 text-sm flex items-center justify-center"
 					onClick={() => {
-						del(id);
+						dispatch({ type: "delete-item", payload: { id } });
 					}}
 				>
 					<p>X</p>
