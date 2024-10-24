@@ -1,12 +1,12 @@
-import { useState, useReducer, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { menuItems } from "./data/db.ts";
-import { ReducerConsumo, initialState } from "./reducers/consumo-reducer.ts";
+import useConsumo from "./hooks/useConsumo.ts";
 import Item from "./components/partials/MenuItem.tsx";
 import Consumo from "./components/partials/Consumo.tsx";
 import Propina from "./components/partials/Propina.tsx";
 
 function App() {
-	const [state, dispatch] = useReducer(ReducerConsumo, initialState);
+	const { state, dispatch } = useConsumo();
 	const [menus] = useState(menuItems);
 
 	useEffect(() => {
@@ -29,7 +29,7 @@ function App() {
 					<h2 className="text-3xl text-blue-800 font-black">Menú</h2>
 					<div className="flex flex-col gap-4">
 						{menus.map((item) => (
-							<Item item={item} key={item.id} dispatch={dispatch} />
+							<Item item={item} key={item.id} />
 						))}
 					</div>
 				</section>
@@ -38,11 +38,9 @@ function App() {
 					{exist ? (
 						<p>{exist}</p>
 					) : (
-						state.menu.map((m) => (
-							<Consumo item={m} key={m.id} dispatch={dispatch} />
-						))
+						state.menu.map((m) => <Consumo item={m} key={m.id} />)
 					)}
-					{!exist && <Propina dispatch={dispatch} state={state} />}
+					{!exist && <Propina />}
 				</section>
 			</main>
 		</>

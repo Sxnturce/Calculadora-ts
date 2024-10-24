@@ -1,13 +1,11 @@
-import { Dispatch } from "react";
-import { ActionsConsumo } from "../../reducers/consumo-reducer";
 import type { MenuItem } from "../../types";
-
+import useConsumo from "../../hooks/useConsumo";
 type MenuProp = {
 	item: MenuItem;
-	dispatch: Dispatch<ActionsConsumo>;
 };
 
-function Consumo({ item, dispatch }: MenuProp) {
+function Consumo({ item }: MenuProp) {
+	const { dispatch } = useConsumo();
 	const { id, name, price, quantity, total } = item;
 
 	return (

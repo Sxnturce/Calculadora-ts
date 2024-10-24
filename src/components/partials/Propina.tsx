@@ -1,13 +1,9 @@
-import { Dispatch, useMemo } from "react";
+import { useMemo } from "react";
 import { idPercent } from "../../data/Propina";
-import { ActionsConsumo, MenuProps } from "../../reducers/consumo-reducer";
+import useConsumo from "../../hooks/useConsumo";
 
-type PropinaProp = {
-	dispatch: Dispatch<ActionsConsumo>;
-	state: MenuProps;
-};
-
-function Propina({ dispatch, state }: PropinaProp) {
+function Propina() {
+	const { state, dispatch } = useConsumo();
 	const subtot = useMemo(() => {
 		const result = state.menu.reduce((prev, item) => {
 			return prev + item.total;
